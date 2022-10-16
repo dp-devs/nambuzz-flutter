@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:namebuzz/screen/home.dart';
 
 class SignupFrom extends StatefulWidget {
   const SignupFrom({Key? key}) : super(key: key);
@@ -158,7 +159,12 @@ class _SignupFromState extends State<SignupFrom> {
                               ),
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => HomeScreen()));
+                          },
                         ),
                       ),
                       SizedBox(
