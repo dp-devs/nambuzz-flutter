@@ -19,8 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showUsernameBox = false;
   bool showUserTextField = true;
   bool showPhoneTextField = true;
+  bool showPasswordTextField = false;
   TextEditingController userNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     //OTP code start
@@ -102,6 +104,38 @@ class _LoginScreenState extends State<LoginScreen> {
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(Icons.person),
                                     hintText: 'Email / Username',
+                                    border: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            //PhoneNumber InputField
+                            Visibility(
+                              visible: showPasswordTextField,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
+                                child: TextField(
+                                  onChanged: (value) {
+                                    log('value $value');
+                                    if (passwordController.text.isEmpty) {
+                                      setState(() {
+                                        showPasswordTextField = false;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        showPasswordTextField = true;
+                                      });
+                                    }
+                                  },
+                                  controller: passwordController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.lock),
+                                    hintText: 'Password',
                                     border: OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.black),
