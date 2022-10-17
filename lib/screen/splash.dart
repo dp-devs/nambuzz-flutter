@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:namebuzz/const/const.dart';
 import 'package:namebuzz/screen/login.dart';
 import 'package:namebuzz/screen/signup.dart';
 
@@ -28,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0XFFff7f50),
+      backgroundColor: postBuzzColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -68,13 +69,13 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             SizedBox(
-              height: 24.h,
+              height: 100.h,
             ),
             Text(
               'Made in India',
               style: TextStyle(
                   fontSize: 26,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
           ],

@@ -122,7 +122,7 @@ class _CustomButtonState extends State<CustomButton> {
                   deviceHeight < 600 ? widget.height.h * 1.2 : widget.height.h,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(widget.radius.r),
-                  color: Colors.red,
+                  color: widget.isBlue ? Colors.blue : Colors.red,
                   border: Border.all(color: Colors.orange)),
               child: widget.requireIcon
                   ? widget.prefixIcon
