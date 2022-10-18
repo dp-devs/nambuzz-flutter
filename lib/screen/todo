@@ -1,0 +1,14 @@
+/*
+showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          Future.delayed(
+                                              const Duration(milliseconds: 400),
+                                              () {
+                                            Navigator.of(context).pop(true);
+                                          });
+                                          return const CustomAlert(
+                                            alertTitle: 'Id Coppied',
+                                          );
+                                        });
+                                                      */

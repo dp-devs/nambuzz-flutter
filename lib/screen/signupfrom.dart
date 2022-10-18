@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:namebuzz/const/const.dart';
 import 'package:namebuzz/screen/home.dart';
 
 class SignupFrom extends StatefulWidget {
@@ -13,7 +14,7 @@ class _SignupFromState extends State<SignupFrom> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0XFFff7f50),
+      backgroundColor: themeColor.withOpacity(0.8),
       body: Stack(
         children: [
           Positioned.fill(
@@ -24,7 +25,7 @@ class _SignupFromState extends State<SignupFrom> {
                   height: 616.h,
                   width: 330.w,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(28)),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
                     color: Colors.white,
                   ),
                   child: Column(
@@ -146,7 +147,7 @@ class _SignupFromState extends State<SignupFrom> {
                             height: 44.h,
                             width: 310.w,
                             decoration: BoxDecoration(
-                                color: Color(0XFFff7f50),
+                                color: themeColor.withOpacity(0.95),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
                             child: Center(
@@ -175,6 +176,7 @@ class _SignupFromState extends State<SignupFrom> {
                         padding: const EdgeInsets.only(left: 4),
                         child: Container(
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('By registering you accept our'),
                               TextButton(
