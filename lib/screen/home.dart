@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:namebuzz/const/const.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -69,7 +70,265 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: FloatingActionButton.extended(
-          onPressed: () {},
+          onPressed: () {
+            // 1st let's buzz pop button section
+            showModalBottomSheet<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  height: 220,
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          child: const Text(
+                            'Start your buzz with the picture of your like either for fun or to showcase your talent, work, idea, creativity, DIY and enjoy watching how people are joining you with their buzzes of similar kind over your started buzz!',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 18,
+                        ),
+                        InkWell(
+                          child: Container(
+                            width: 180.w,
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              color: themeColor.withOpacity(0.6),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(28)),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  color: Colors.green,
+                                  height: 34,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Image.asset('assets/buzzadd.png'),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 14,
+                                ),
+                                Text(
+                                  "Let's buzz!",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          onTap: () {
+                            // 2nd Let's go pop button section
+                            showModalBottomSheet<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Container(
+                                  height: 300,
+                                  color: Colors.white,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  bottom: 26, right: 16),
+                                              child: Text(
+                                                '+ Add a topic',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            // Open section
+                                            Container(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 60,
+                                                    child: Image.asset(
+                                                        'assets/globe3.gif'),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10.h,
+                                                  ),
+                                                  Text(
+                                                    'Open',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            // Social section
+                                            Container(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 60,
+                                                    child: Image.asset(
+                                                        'assets/globe3.gif'),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10.h,
+                                                  ),
+                                                  Text(
+                                                    'Social',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            // Closed section
+                                            Container(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 60,
+                                                    child: Image.asset(
+                                                        'assets/globe3.gif'),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10.h,
+                                                  ),
+                                                  Text(
+                                                    'Closed',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Divider(
+                                          thickness: 1,
+                                          color: Colors.black.withOpacity(0.20),
+                                        ),
+                                        SizedBox(
+                                          height: 18,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Start a buzz',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 4.w,
+                                            ),
+                                            Text(
+                                              'Open to everyone',
+                                              style: TextStyle(
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 18.h,
+                                        ),
+                                        InkWell(
+                                          child: Container(
+                                            width: 180.w,
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 10),
+                                            decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(28)),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  height: 34,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: Image.asset(
+                                                        'assets/buzzadd.png'),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 14,
+                                                ),
+                                                Text(
+                                                  "Let's go",
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
           label: Text(
             'Start a Buzz',
             style: TextStyle(
@@ -244,247 +503,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Image(image: AssetImage('assets/1.jpg')),
-                      ],
-                    ),
-                  ),
-                  // 4th section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      InkWell(
-                        child: Container(
-                          height: 24.h,
-                          width: 24.w,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/buzzpost.png'),
-                            ),
-                          ),
-                        ),
-                        onTap: () {},
-                      ),
-                      IconButton(
-                          onPressed: () {}, icon: Icon(Icons.favorite_outline)),
-                      IconButton(
-                          onPressed: () {}, icon: Icon(Icons.forum_outlined)),
-                      IconButton(
-                          onPressed: () {}, icon: Icon(Icons.comment_outlined)),
-                      IconButton(
-                          onPressed: () {}, icon: Icon(Icons.share_outlined)),
-                    ],
-                  ),
-                  // 5th section
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 18),
-                        child: Text(
-                          '14K',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0XFFFFC312),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 2,
-                      ),
-                      Text(
-                        'Likes',
-                        style: TextStyle(fontSize: 14),
-                      )
-                    ],
-                  ),
-                  // 6th section
-                  SizedBox(
-                    height: 4,
-                  ),
-                  // 7th section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 12),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Prashant',
-                              style: TextStyle(fontSize: 10.sp),
-                            ),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Text('and', style: TextStyle(fontSize: 10.sp)),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Text('55',
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            SizedBox(
-                              width: 1.w,
-                            ),
-                            Text('others comment',
-                                style: TextStyle(fontSize: 10.sp)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(right: 14),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4),
-                              child: Container(
-                                height: 18.h,
-                                width: 18.w,
-                                child: Image.asset('assets/buzzadd.png'),
-                              ),
-                            ),
-                            Text(
-                              '20',
-                              style: TextStyle(
-                                fontSize: 10.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 2.w,
-                            ),
-                            Text(
-                              'people have buzz on this',
-                              style: TextStyle(fontSize: 10.sp),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            //2nd Post ******************************************************
-            Container(
-              padding: EdgeInsets.only(bottom: 8),
-              margin: EdgeInsets.only(top: 10),
-              color: Colors.white,
-              child: Column(
-                children: [
-                  //1st section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.photo_camera),
-                              iconSize: 20,
-                            ),
-                          ),
-                          Container(
-                            child: Text(
-                              'Travel',
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.more_vert),
-                        iconSize: 20,
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Colors.black,
-                  ),
-                  // 2nd section
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/buzz-logo.png'),
-                                backgroundColor: Colors.transparent,
-                              ),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 6),
-                                    child: Text(
-                                      'Namebuzz',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 6),
-                                    child: Icon(
-                                      Icons.verified,
-                                      size: 18,
-                                      color: Color(0XFFFFC312),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 6),
-                                child: Text(
-                                  '1m ago',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.bookmark_outline),
-                        iconSize: 22,
-                      ),
-                    ],
-                  ),
-                  // 3rd section
-                  Container(
-                    margin: EdgeInsets.all(6),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text(
-                            'This is post title. This is post title. This is post title. This is post title. This is post title. This is post title',
-                            style: TextStyle(
-                              fontSize: 14,
-                              // fontFamily: 'Roboto',
-                            ),
-                          ),
-                        ),
-                        Image(image: AssetImage('assets/2.jpg')),
                       ],
                     ),
                   ),

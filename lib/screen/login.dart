@@ -9,7 +9,6 @@ import 'package:namebuzz/screen/otp_screen.dart';
 import 'package:namebuzz/screen/signup.dart';
 import 'package:namebuzz/const/widget/custom_button.dart';
 import 'package:pinput/pinput.dart';
-
 import '../const/widget/custom_alert.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -258,6 +257,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         dynamic response = await ApiService()
                                             .sendOtp(
                                                 phoneNumberController.text);
+                                        // .sendOtp(
+                                        //     phoneNumberController.text);
                                         log('message $response');
                                         Navigator.push(
                                             context,

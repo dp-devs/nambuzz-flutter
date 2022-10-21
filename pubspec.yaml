@@ -38,6 +38,7 @@ dependencies:
   flutter_screenutil: ^5.5.4
   pinput: ^2.2.16
   http: ^0.13.5
+  flutter_instagram_stories: ^1.0.2+1
   
 
 dev_dependencies:
