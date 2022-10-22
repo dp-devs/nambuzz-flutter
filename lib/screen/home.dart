@@ -13,10 +13,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0XFFf6e58d),
+      backgroundColor: postBuzzColor,
       // AppBar
       appBar: AppBar(
-        backgroundColor: Color(0XFFFFC312),
+        backgroundColor: themeColor.withOpacity(0.95),
         leading: IconButton(
           onPressed: () {},
           icon: CircleAvatar(
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: Theme(
         data: Theme.of(context).copyWith(
           floatingActionButtonTheme: FloatingActionButtonThemeData(
-            backgroundColor: Color(0XFFf9ca24),
+            backgroundColor: postBuzzColor,
             extendedSizeConstraints:
                 BoxConstraints.tightFor(width: 138.w, height: 40.h),
           ),
@@ -99,10 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         InkWell(
                           child: Container(
-                            width: 180.w,
+                            width: 170.w,
                             padding: EdgeInsets.symmetric(vertical: 10),
                             decoration: BoxDecoration(
-                              color: themeColor.withOpacity(0.6),
+                              color: postBuzzColor,
                               borderRadius:
                                   BorderRadius.all(Radius.circular(28)),
                             ),
@@ -276,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         InkWell(
                                           child: Container(
-                                            width: 180.w,
+                                            width: 160.w,
                                             padding: EdgeInsets.symmetric(
                                                 vertical: 10),
                                             decoration: BoxDecoration(
@@ -353,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       //Buttom_Navbar
       bottomNavigationBar: BottomAppBar(
-        color: Color(0XFFFFC312),
+        color: themeColor.withOpacity(0.95),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -384,6 +384,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Storis showing section ***************************************
+
             //1st Post ******************************************************
             Container(
               padding: EdgeInsets.only(bottom: 8),
