@@ -1,6 +1,14 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_editor_plus/image_editor_plus.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:namebuzz/const/const.dart';
+
+import '../const/widget/custom_alert.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -10,6 +18,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  File? _image;
+
+  final _picker = ImagePicker();
+  // Implementing the image picker
+  Future<void> _openImagePicker(source) async {
+    final XFile? pickedImage =
+        // await _picker.pickImage(source: ImageSource.camera);
+        await _picker.pickImage(source: source);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+      final bytes = await _image!.readAsBytes();
+      final editedImage = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ImageEditor(
+            image: bytes, // <-- Uint8List of image
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
               context: context,
               builder: (BuildContext context) {
                 return Container(
-                  height: 220,
+                  height: 300.h,
                   color: Colors.white,
                   child: Center(
                     child: Column(
@@ -85,17 +117,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 14, right: 14),
-                          child: const Text(
+                          child: Text(
                             'Start your buzz with the picture of your like either for fun or to showcase your talent, work, idea, creativity, DIY and enjoy watching how people are joining you with their buzzes of similar kind over your started buzz!',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontSize: 18.sp,
                               color: Colors.black,
                             ),
                           ),
                         ),
                         SizedBox(
-                          height: 18,
+                          height: 22.h,
                         ),
                         InkWell(
                           child: Container(
@@ -133,6 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           onTap: () {
                             // 2nd Let's go pop button section
+                            Navigator.pop(context);
                             showModalBottomSheet<void>(
                               context: context,
                               builder: (BuildContext context) {
@@ -168,75 +201,138 @@ class _HomeScreenState extends State<HomeScreen> {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             // Open section
-                                            Container(
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    height: 60,
-                                                    child: Image.asset(
-                                                        'assets/globe3.gif'),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                  Text(
-                                                    'Open',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black,
+                                            GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  400), () {
+                                                        Navigator.of(context)
+                                                            .pop(true);
+                                                      });
+                                                      return const CustomAlert(
+                                                        alertTitle:
+                                                            'Coming Soon',
+                                                      );
+                                                    });
+                                              },
+                                              child: Container(
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 60,
+                                                      child: Image.asset(
+                                                          'assets/globe3.gif'),
                                                     ),
-                                                  )
-                                                ],
+                                                    SizedBox(
+                                                      height: 10.h,
+                                                    ),
+                                                    Text(
+                                                      'Open',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             // Social section
-                                            Container(
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    height: 60,
-                                                    child: Image.asset(
-                                                        'assets/globe3.gif'),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                  Text(
-                                                    'Social',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black,
+                                            GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  400), () {
+                                                        Navigator.of(context)
+                                                            .pop(true);
+                                                      });
+                                                      return const CustomAlert(
+                                                        alertTitle:
+                                                            'Social Selected',
+                                                      );
+                                                    });
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    // color: Colors.blue,
                                                     ),
-                                                  )
-                                                ],
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 60,
+                                                      child: Image.asset(
+                                                          'assets/globe3.gif'),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10.h,
+                                                    ),
+                                                    Text(
+                                                      'Social',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             // Closed section
-                                            Container(
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    height: 60,
-                                                    child: Image.asset(
-                                                        'assets/globe3.gif'),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                  Text(
-                                                    'Closed',
-                                                    style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black,
+                                            GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      Future.delayed(
+                                                          const Duration(
+                                                              milliseconds:
+                                                                  400), () {
+                                                        Navigator.of(context)
+                                                            .pop(true);
+                                                      });
+                                                      return const CustomAlert(
+                                                        alertTitle:
+                                                            'Coming Soon',
+                                                      );
+                                                    });
+                                              },
+                                              child: Container(
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 60,
+                                                      child: Image.asset(
+                                                          'assets/globe3.gif'),
                                                     ),
-                                                  )
-                                                ],
+                                                    SizedBox(
+                                                      height: 10.h,
+                                                    ),
+                                                    Text(
+                                                      'Closed',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -312,7 +408,183 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ],
                                             ),
                                           ),
-                                          onTap: () {},
+                                          onTap: () {
+                                            // 3rd Section
+                                            Navigator.pop(context);
+                                            showModalBottomSheet<void>(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  height: 300,
+                                                  color: Colors.white,
+                                                  child: Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: <Widget>[
+                                                        SizedBox(
+                                                          height: 18,
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Start a buzz',
+                                                              style: TextStyle(
+                                                                fontSize: 16.sp,
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 4.w,
+                                                            ),
+                                                            Text(
+                                                              'Choose from :',
+                                                              style: TextStyle(
+                                                                fontSize: 16.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        SizedBox(
+                                                          height: 18.h,
+                                                        ),
+                                                        InkWell(
+                                                          child: Container(
+                                                            width: 160.w,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    vertical:
+                                                                        10),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.green,
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          28)),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Container(
+                                                                  height: 34,
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            4.0),
+                                                                    child: Image
+                                                                        .asset(
+                                                                            'assets/buzzadd.png'),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 14,
+                                                                ),
+                                                                Text(
+                                                                  "Gallery",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            log('message');
+                                                            _openImagePicker(
+                                                                ImageSource
+                                                                    .gallery);
+                                                          },
+                                                        ),
+                                                        SizedBox(
+                                                          height: 20.h,
+                                                        ),
+                                                        InkWell(
+                                                          child: Container(
+                                                            width: 160.w,
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    vertical:
+                                                                        10),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  Colors.green,
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          28)),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Container(
+                                                                  height: 34,
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        const EdgeInsets.all(
+                                                                            4.0),
+                                                                    child: Image
+                                                                        .asset(
+                                                                            'assets/buzzadd.png'),
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 14,
+                                                                ),
+                                                                Text(
+                                                                  "Camera",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .white,
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            _openImagePicker(
+                                                                ImageSource
+                                                                    .camera);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
                                         ),
                                       ],
                                     ),

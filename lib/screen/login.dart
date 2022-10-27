@@ -282,7 +282,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     const EdgeInsets.only(left: 24, right: 24),
                                 child: InkWell(
                                   child: Container(
-                                    color: Colors.blueAccent,
                                     child: Row(
                                       children: [
                                         Container(
@@ -291,20 +290,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                           decoration: BoxDecoration(
                                             image: DecorationImage(
                                                 image: AssetImage(
-                                                    'assets/buzz-logo.png'),
+                                                    'assets/Google.png'),
                                                 fit: BoxFit.cover),
                                           ),
                                           // child: Image.asset('assets/buzz-logo.png'),
                                         ),
                                         SizedBox(
-                                          width: 14.w,
+                                          width: 2.w,
                                         ),
-                                        Text(
-                                          'Sign in with google',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                        Expanded(
+                                          child: Container(
+                                            height: 40.h,
+                                            width: 40.w,
+                                            color: Colors.blueAccent,
+                                            child: Center(
+                                              child: Text(
+                                                'Sign in with google',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
                                         )
                                       ],
                                     ),

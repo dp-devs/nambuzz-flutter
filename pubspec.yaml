@@ -39,11 +39,18 @@ dependencies:
   pinput: ^2.2.16
   http: ^0.13.5
   flutter_instagram_stories: ^1.0.2+1
+  hive:
+  hive_flutter:
+  path_provider: ^2.0.11
+  image_picker: ^0.8.6
+  image_editor_plus: ^0.1.5
   
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  hive_generator:
+  build_runner:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
