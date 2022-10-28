@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:namebuzz/const/const.dart';
 import 'package:namebuzz/screen/home.dart';
 
+import '../const/widget/custom_alert.dart';
+
 class SignupFrom extends StatefulWidget {
   const SignupFrom({Key? key}) : super(key: key);
 
@@ -11,6 +13,12 @@ class SignupFrom extends StatefulWidget {
 }
 
 class _SignupFromState extends State<SignupFrom> {
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController retypePasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +55,7 @@ class _SignupFromState extends State<SignupFrom> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: TextField(
+                          controller: userNameController,
                           decoration: InputDecoration(
                             hintText: 'Username',
                             border: OutlineInputBorder(
@@ -63,6 +72,7 @@ class _SignupFromState extends State<SignupFrom> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: TextField(
+                          controller: firstNameController,
                           decoration: InputDecoration(
                             hintText: 'First Name',
                             border: OutlineInputBorder(
@@ -79,6 +89,7 @@ class _SignupFromState extends State<SignupFrom> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: TextField(
+                          controller: lastNameController,
                           decoration: InputDecoration(
                             hintText: 'Last Name',
                             border: OutlineInputBorder(
@@ -95,6 +106,7 @@ class _SignupFromState extends State<SignupFrom> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: TextField(
+                          controller: emailController,
                           decoration: InputDecoration(
                             hintText: 'Email address',
                             border: OutlineInputBorder(
@@ -111,6 +123,7 @@ class _SignupFromState extends State<SignupFrom> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: TextField(
+                          controller: passwordController,
                           decoration: InputDecoration(
                             hintText: 'Password',
                             border: OutlineInputBorder(
@@ -127,6 +140,7 @@ class _SignupFromState extends State<SignupFrom> {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, right: 20),
                         child: TextField(
+                          controller: retypePasswordController,
                           decoration: InputDecoration(
                             hintText: 'Retype Password',
                             border: OutlineInputBorder(
@@ -161,10 +175,101 @@ class _SignupFromState extends State<SignupFrom> {
                             ),
                           ),
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => HomeScreen()));
+                            if (userNameController.text.isNotEmpty) {
+                              if (firstNameController.text.isNotEmpty) {
+                                if (lastNameController.text.isNotEmpty) {
+                                  if (emailController.text.isNotEmpty) {
+                                    if (passwordController.text.isNotEmpty) {
+                                      if (passwordController.text !=
+                                          retypePasswordController.text) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              Future.delayed(
+                                                  const Duration(
+                                                      milliseconds: 800), () {
+                                                Navigator.of(context).pop(true);
+                                              });
+                                              return const CustomAlert(
+                                                alertTitle:
+                                                    'Please check your passwor',
+                                              );
+                                            });
+                                      } else {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) => HomeScreen()));
+                                      }
+                                    } else {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            Future.delayed(
+                                                const Duration(
+                                                    milliseconds: 800), () {
+                                              Navigator.of(context).pop(true);
+                                            });
+                                            return const CustomAlert(
+                                              alertTitle: 'Enter Password',
+                                            );
+                                          });
+                                    }
+                                  } else {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          Future.delayed(
+                                              const Duration(milliseconds: 500),
+                                              () {
+                                            Navigator.of(context).pop(true);
+                                          });
+                                          return const CustomAlert(
+                                            alertTitle: 'Enter Email',
+                                          );
+                                        });
+                                  }
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        Future.delayed(
+                                            const Duration(milliseconds: 500),
+                                            () {
+                                          Navigator.of(context).pop(true);
+                                        });
+                                        return const CustomAlert(
+                                          alertTitle: 'Enter Last Name',
+                                        );
+                                      });
+                                }
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      Future.delayed(
+                                          const Duration(milliseconds: 500),
+                                          () {
+                                        Navigator.of(context).pop(true);
+                                      });
+                                      return const CustomAlert(
+                                        alertTitle: 'Enter First Name',
+                                      );
+                                    });
+                              }
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    Future.delayed(
+                                        const Duration(milliseconds: 500), () {
+                                      Navigator.of(context).pop(true);
+                                    });
+                                    return const CustomAlert(
+                                      alertTitle: 'Enter Username',
+                                    );
+                                  });
+                            }
                           },
                         ),
                       ),

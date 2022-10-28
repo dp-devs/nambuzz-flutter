@@ -27,31 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    //OTP code start
-    final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 56,
-      textStyle: TextStyle(
-          fontSize: 20,
-          color: Color.fromRGBO(30, 60, 87, 1),
-          fontWeight: FontWeight.w600),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
-        borderRadius: BorderRadius.circular(20),
-      ),
-    );
-
-    final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
-      borderRadius: BorderRadius.circular(8),
-    );
-
-    final submittedPinTheme = defaultPinTheme.copyWith(
-      decoration: defaultPinTheme.decoration?.copyWith(
-        color: Color.fromRGBO(234, 239, 243, 1),
-      ),
-    );
-// OTP code end
     return Scaffold(
         backgroundColor: themeColor.withOpacity(0.8),
         body: Stack(
@@ -82,6 +57,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 16.h,
                         ),
+
+                        ////////////////////////////
+                        // UserName InputField //
+                        ////////////////////////////
 
                         Visibility(
                           visible: showUserTextField,
@@ -116,7 +95,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 10.h,
                         ),
-                        //PhoneNumber InputField
+
+                        ////////////////////////////
+                        // PhoneNumber InputField //
+                        ////////////////////////////
+
                         Visibility(
                           visible: showPasswordTextField,
                           child: Padding(
@@ -190,7 +173,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 18.h,
                         ),
-                        //Send OTP Button
+
+                        //////////////////////
+                        // Send OTP button //
+                        ////////////////////
+
                         userNameController.text.isEmpty &&
                                 phoneNumberController.text.isEmpty
                             ? SizedBox.shrink()
@@ -257,8 +244,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                         dynamic response = await ApiService()
                                             .sendOtp(
                                                 phoneNumberController.text);
-                                        // .sendOtp(
-                                        //     phoneNumberController.text);
                                         log('message $response');
                                         Navigator.push(
                                             context,
@@ -273,7 +258,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        // Signup with google container
+
+                        ///////////////////////////////////
+                        // SignIn with Google container //
+                        /////////////////////////////////
+
                         userNameController.text.isNotEmpty ||
                                 phoneNumberController.text.isNotEmpty
                             ? SizedBox.shrink()
@@ -302,7 +291,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                           child: Container(
                                             height: 40.h,
                                             width: 40.w,
-                                            color: Colors.blueAccent,
+                                            decoration: BoxDecoration(
+                                              color: Colors.blueAccent,
+                                              borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10),
+                                              ),
+                                            ),
                                             child: Center(
                                               child: Text(
                                                 'Sign in with google',
