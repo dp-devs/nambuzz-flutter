@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "826877328955",
+    "project_id": "namebuzz-e78ef",
+    "storage_bucket": "namebuzz-e78ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826877328955:android:80e6c835bed081dc21e61e",
+        "android_client_info": {
+          "package_name": "com.app.namebuzz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826877328955-k670bu1e07u8ktdo3ebe9iq1n8dg6mbr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.namebuzz",
+            "certificate_hash": "dfd6fda8821057037fa4fd336044b4eea2bd60e3"
+          }
+        },
+        {
+          "client_id": "826877328955-sga9rf65srfotb9m9nkj0npdv09fs8si.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsb3tffPGzpFrRUR4YBtMjd9V3nF23Xq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826877328955-sga9rf65srfotb9m9nkj0npdv09fs8si.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

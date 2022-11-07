@@ -2,12 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:namebuzz/api/api_service.dart';
 import 'package:namebuzz/const/const.dart';
 import 'package:namebuzz/screen/home.dart';
 import 'package:namebuzz/screen/otp_screen.dart';
 import 'package:namebuzz/screen/signup.dart';
-import 'package:namebuzz/const/widget/custom_button.dart';
 import 'package:pinput/pinput.dart';
 import '../const/widget/custom_alert.dart';
 
@@ -25,6 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  var db = Hive.box('profileDetails');
+  bool buttonIsClicked = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     height: 380.h,
                     width: 318.w,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(28)),
                       color: Colors.white,
                     ),
@@ -47,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 50.h,
                         ),
-                        Text(
+                        const Text(
                           'Login and Buzz Your Name',
                           style: TextStyle(
                               fontSize: 18,
@@ -81,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                               controller: userNameController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.person),
                                 hintText: 'Email / Username',
                                 border: OutlineInputBorder(
@@ -106,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             padding: const EdgeInsets.only(left: 20, right: 20),
                             child: TextField(
                               controller: passwordController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 prefixIcon: Icon(Icons.lock),
                                 hintText: 'Password',
                                 border: OutlineInputBorder(
@@ -119,22 +122,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         userNameController.text.isNotEmpty ||
                                 phoneNumberController.text.isNotEmpty
-                            ? SizedBox.shrink()
-                            : SizedBox(
+                            ? const SizedBox.shrink()
+                            : const SizedBox(
                                 height: 10,
                               ),
                         userNameController.text.isNotEmpty ||
                                 phoneNumberController.text.isNotEmpty
-                            ? SizedBox.shrink()
-                            : Text(
+                            ? const SizedBox.shrink()
+                            : const Text(
                                 '-------------------- OR --------------------',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
                         userNameController.text.isNotEmpty ||
                                 phoneNumberController.text.isNotEmpty
-                            ? SizedBox.shrink()
-                            : SizedBox(
+                            ? const SizedBox.shrink()
+                            : const SizedBox(
                                 height: 10,
                               ),
                         Visibility(
@@ -157,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 }
                               },
                               controller: phoneNumberController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 counterText: '',
                                 prefixIcon: Icon(Icons.phone),
                                 hintText: 'Phone Number',
@@ -180,28 +183,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         userNameController.text.isEmpty &&
                                 phoneNumberController.text.isEmpty
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : Padding(
-                                padding: EdgeInsets.only(left: 20, right: 20),
+                                padding:
+                                    const EdgeInsets.only(left: 20, right: 20),
                                 child: InkWell(
                                   child: Container(
                                     height: 44.h,
                                     width: 310.w,
                                     decoration: BoxDecoration(
                                         color: themeColor.withOpacity(0.95),
-                                        borderRadius: BorderRadius.all(
+                                        borderRadius: const BorderRadius.all(
                                             Radius.circular(10))),
                                     child: Center(
-                                      child: Text(
-                                        'Continue',
-                                        style: TextStyle(
-                                            fontSize: 19,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
+                                      child: buttonIsClicked
+                                          ? CircularProgressIndicator(
+                                              color: Colors.white,
+                                            )
+                                          : Text(
+                                              'Continue',
+                                              style: TextStyle(
+                                                  fontSize: 19,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
                                     ),
                                   ),
                                   onTap: () async {
+                                    setState(() {
+                                      buttonIsClicked = true;
+                                    });
                                     if (phoneNumberController.text.isEmpty) {
                                       if (passwordController.text.isEmpty) {
                                         showDialog(
@@ -217,13 +228,44 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     'Please Enter Password',
                                               );
                                             });
+                                        setState(() {
+                                          buttonIsClicked = false;
+                                        });
                                       } else if (userNameController
                                           .text.isNotEmpty) {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HomeScreen()));
+                                        dynamic response = await ApiService()
+                                            .loginUser(userNameController.text,
+                                                passwordController.text);
+                                        log('logged in user == $response');
+                                        if (response != 'User Found') {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 800), () {
+                                                  Navigator.of(context)
+                                                      .pop(true);
+                                                });
+                                                return const CustomAlert(
+                                                  alertTitle:
+                                                      'Wrong Credentials',
+                                                );
+                                              });
+                                          setState(() {
+                                            buttonIsClicked = false;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            buttonIsClicked = false;
+                                          });
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const HomeScreen()));
+                                        }
                                       }
                                     } else {
                                       if (phoneNumberController.length < 10) {
@@ -240,22 +282,61 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     'Please Enter Valid Phone Number',
                                               );
                                             });
+                                        setState(() {
+                                          buttonIsClicked = false;
+                                        });
                                       } else {
                                         dynamic response = await ApiService()
-                                            .sendOtp(
+                                            .checkPhone(
                                                 phoneNumberController.text);
-                                        log('message $response');
-                                        Navigator.push(
+                                        log('response check phone == $response');
+                                        if (response !=
+                                            'User with same number exists') {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 800), () {
+                                                  Navigator.of(context)
+                                                      .pop(true);
+                                                });
+                                                return const CustomAlert(
+                                                  alertTitle:
+                                                      'Please Register First',
+                                                );
+                                              });
+                                          setState(() {
+                                            buttonIsClicked = false;
+                                          });
+                                        } else {
+                                          dynamic response = await ApiService()
+                                              .sendOtp(
+                                                  phoneNumberController.text);
+                                          log('message $response');
+
+                                          // ignore: use_build_context_synchronously
+                                          Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => OtpScreen(
-                                                    register: false)));
+                                              builder: (context) => OtpScreen(
+                                                register: false,
+                                                phone:
+                                                    phoneNumberController.text,
+                                                otpNumber: response,
+                                              ),
+                                            ),
+                                          );
+                                          setState(() {
+                                            buttonIsClicked = false;
+                                          });
+                                        }
                                       }
                                     }
                                   },
                                 ),
                               ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
 
@@ -263,73 +344,74 @@ class _LoginScreenState extends State<LoginScreen> {
                         // SignIn with Google container //
                         /////////////////////////////////
 
-                        userNameController.text.isNotEmpty ||
-                                phoneNumberController.text.isNotEmpty
-                            ? SizedBox.shrink()
-                            : Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 24, right: 24),
-                                child: InkWell(
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          height: 40.h,
-                                          width: 40.w,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: AssetImage(
-                                                    'assets/Google.png'),
-                                                fit: BoxFit.cover),
-                                          ),
-                                          // child: Image.asset('assets/buzz-logo.png'),
-                                        ),
-                                        SizedBox(
-                                          width: 2.w,
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 40.h,
-                                            width: 40.w,
-                                            decoration: BoxDecoration(
-                                              color: Colors.blueAccent,
-                                              borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10),
-                                                bottomRight:
-                                                    Radius.circular(10),
-                                              ),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                'Sign in with google',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  onTap: () {},
-                                ),
-                              ),
+                        // userNameController.text.isNotEmpty ||
+                        //         phoneNumberController.text.isNotEmpty
+                        //     ? const SizedBox.shrink()
+                        //     : Padding(
+                        //         padding:
+                        //             const EdgeInsets.only(left: 24, right: 24),
+                        //         child: InkWell(
+                        //           child: Container(
+                        //             child: Row(
+                        //               children: [
+                        //                 Container(
+                        //                   height: 40.h,
+                        //                   width: 40.w,
+                        //                   decoration: const BoxDecoration(
+                        //                     image: DecorationImage(
+                        //                         image: AssetImage(
+                        //                             'assets/Google.png'),
+                        //                         fit: BoxFit.cover),
+                        //                   ),
+                        //                   // child: Image.asset('assets/buzz-logo.png'),
+                        //                 ),
+                        //                 SizedBox(
+                        //                   width: 2.w,
+                        //                 ),
+                        //                 Expanded(
+                        //                   child: Container(
+                        //                     height: 40.h,
+                        //                     width: 40.w,
+                        //                     decoration: const BoxDecoration(
+                        //                       color: Colors.blueAccent,
+                        //                       borderRadius: BorderRadius.only(
+                        //                         topRight: Radius.circular(10),
+                        //                         bottomRight:
+                        //                             Radius.circular(10),
+                        //                       ),
+                        //                     ),
+                        //                     child: const Center(
+                        //                       child: Text(
+                        //                         'Sign in with google',
+                        //                         style: TextStyle(
+                        //                             fontSize: 16,
+                        //                             fontWeight: FontWeight.bold,
+                        //                             color: Colors.white),
+                        //                       ),
+                        //                     ),
+                        //                   ),
+                        //                 )
+                        //               ],
+                        //             ),
+                        //           ),
+                        //           onTap: () {},
+                        //         ),
+                        //       ),
 
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text("Don't have an account?"),
+                              const Text("Don't have an account?"),
                               TextButton(
                                   onPressed: () {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => SignupScreen()));
+                                            builder: (_) =>
+                                                const SignupScreen()));
                                   },
-                                  child: Text('Register here'))
+                                  child: const Text('Register here'))
                             ],
                           ),
                         ),
@@ -343,7 +425,7 @@ class _LoginScreenState extends State<LoginScreen> {
               bottom: 380.h,
               child: Align(
                 alignment: Alignment.center,
-                child: Container(
+                child: SizedBox(
                     height: 100.h, child: Image.asset('assets/buzz-logo.png')),
               ),
             ),

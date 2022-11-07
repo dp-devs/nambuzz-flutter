@@ -1,4 +1,4 @@
-package com.example.namebuzz
+package com.app.namebuzz
 
 import io.flutter.embedding.android.FlutterActivity
 

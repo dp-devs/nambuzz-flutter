@@ -1,45 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:namebuzz/const/const.dart';
 import 'package:namebuzz/screen/home.dart';
 import 'package:namebuzz/screen/signupfrom.dart';
 import 'package:pinput/pinput.dart';
 
+import '../const/widget/custom_alert.dart';
+
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({Key? key, required this.register}) : super(key: key);
+  const OtpScreen(
+      {Key? key,
+      required this.register,
+      required this.phone,
+      required this.otpNumber})
+      : super(key: key);
   final bool register;
+  final String phone;
+  final String otpNumber;
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  TextEditingController otpController = TextEditingController();
+  var db = Hive.box('profileDetails');
+
   @override
   Widget build(BuildContext context) {
     //OTP code start
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
-      textStyle: TextStyle(
+      textStyle: const TextStyle(
           fontSize: 20,
           color: Color.fromRGBO(30, 60, 87, 1),
           fontWeight: FontWeight.w600),
       decoration: BoxDecoration(
-        border: Border.all(color: Color.fromRGBO(234, 239, 243, 1)),
+        border: Border.all(color: const Color.fromRGBO(234, 239, 243, 1)),
         borderRadius: BorderRadius.circular(20),
       ),
     );
 
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: Color.fromRGBO(114, 178, 238, 1)),
+      border: Border.all(color: const Color.fromRGBO(114, 178, 238, 1)),
       borderRadius: BorderRadius.circular(8),
     );
 
     final submittedPinTheme = defaultPinTheme.copyWith(
       decoration: defaultPinTheme.decoration?.copyWith(
-        color: Color.fromRGBO(234, 239, 243, 1),
+        color: const Color.fromRGBO(234, 239, 243, 1),
       ),
     );
 // OTP code end
@@ -52,9 +63,10 @@ class _OtpScreenState extends State<OtpScreen> {
               alignment: Alignment.center,
               child: SingleChildScrollView(
                 child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.w),
                   height: 320.h,
-                  width: 318.w,
-                  decoration: BoxDecoration(
+                  width: 335.w,
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(28)),
                     color: Colors.white,
                   ),
@@ -63,7 +75,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       SizedBox(
                         height: 50.h,
                       ),
-                      Text(
+                      const Text(
                         'Verify Mobile Number',
                         style: TextStyle(
                             fontSize: 18,
@@ -74,8 +86,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       SizedBox(
                         height: 16.h,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40, right: 20),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 40, right: 20),
                         child: Text(
                           'OTP has been sent to you on your mobile number. Please enter below',
                           style: TextStyle(
@@ -87,6 +99,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       ),
                       //OTP InputField
                       Pinput(
+                        controller: otpController,
+                        length: 6,
                         // defaultPinTheme: defaultPinTheme,
                         // focusedPinTheme: focusedPinTheme,
                         // submittedPinTheme: submittedPinTheme,
@@ -103,16 +117,16 @@ class _OtpScreenState extends State<OtpScreen> {
                       ),
                       //OTP submit Button
                       Padding(
-                        padding: EdgeInsets.only(left: 20, right: 20),
+                        padding: const EdgeInsets.only(left: 20, right: 20),
                         child: InkWell(
                           child: Container(
                             height: 44.h,
                             width: 310.w,
                             decoration: BoxDecoration(
                                 color: themeColor.withOpacity(0.95),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10))),
-                            child: Center(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(10))),
+                            child: const Center(
                               child: Text(
                                 'Submit',
                                 style: TextStyle(
@@ -123,16 +137,32 @@ class _OtpScreenState extends State<OtpScreen> {
                             ),
                           ),
                           onTap: () {
-                            if (widget.register == true) {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => SignupFrom()));
+                            if (widget.otpNumber == otpController.text) {
+                              if (widget.register == true) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                            SignupFrom(phone: widget.phone)));
+                              } else {
+                                db.put('userLoggedIn', true);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => const HomeScreen()));
+                              }
                             } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => HomeScreen()));
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    Future.delayed(
+                                        const Duration(milliseconds: 400), () {
+                                      Navigator.of(context).pop(true);
+                                    });
+                                    return const CustomAlert(
+                                      alertTitle: 'Please Check Otp Agsain',
+                                    );
+                                  });
                             }
                           },
                         ),
@@ -147,7 +177,7 @@ class _OtpScreenState extends State<OtpScreen> {
             bottom: 320.h,
             child: Align(
               alignment: Alignment.center,
-              child: Container(
+              child: SizedBox(
                   height: 100.h, child: Image.asset('assets/buzz-logo.png')),
             ),
           ),

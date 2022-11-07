@@ -2,13 +2,14 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:namebuzz/const/const.dart';
 
 import '../const/widget/custom_alert.dart';
+import 'add_post_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,10 +21,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool isTopicAdded = false;
   File? _image;
+  var editedImage;
+  var bytes;
+  var postedImage;
+
+  List<dynamic> allPostsNonRev = [];
+  List<dynamic> allPosts = [];
+  var db = Hive.box('profileDetails');
 
   final _picker = ImagePicker();
   // Implementing the image picker
   Future<void> _openImagePicker(source) async {
+    Navigator.pop(context);
     final XFile? pickedImage =
         // await _picker.pickImage(source: ImageSource.camera);
         await _picker.pickImage(source: source);
@@ -32,8 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
         isTopicAdded = false;
         _image = File(pickedImage.path);
       });
-      final bytes = await _image!.readAsBytes();
-      final editedImage = await Navigator.push(
+      bytes = await _image!.readAsBytes();
+      // ignore: use_build_context_synchronously
+      editedImage = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => ImageEditor(
@@ -41,7 +51,33 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
+      // .then((value) => Navigator.push(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => const AddPostPage()),
+      //     ));
+      if (editedImage != null) {
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AddPostPage(image: bytes)),
+        );
+        bytes = editedImage;
+        postedImage = MemoryImage(bytes);
+        setState(() {});
+      }
     }
+  }
+
+  @override
+  void initState() {
+    if (db.get('allPost') == null) {
+      allPosts = [];
+    } else {
+      allPostsNonRev = db.get('allPost');
+      allPosts = allPostsNonRev.reversed.toList();
+    }
+
+    super.initState();
   }
 
   @override
@@ -53,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: themeColor.withOpacity(0.95),
         leading: IconButton(
           onPressed: () {},
-          icon: CircleAvatar(
+          icon: const CircleAvatar(
             backgroundColor: Colors.transparent,
             backgroundImage: AssetImage('assets/7.jpg'),
           ),
@@ -61,33 +97,33 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.military_tech,
             ),
             iconSize: 26,
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.group),
+            icon: const Icon(Icons.group),
             iconSize: 24,
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.send,
             ),
             iconSize: 24,
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.notifications,
             ),
             iconSize: 24,
           ),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
             ),
             iconSize: 24,
@@ -134,12 +170,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         InkWell(
                           child: Container(
                             width: 170.w,
-                            padding: EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             decoration: BoxDecoration(
                               color: postBuzzColor,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(28)),
-                              boxShadow: [
+                                  const BorderRadius.all(Radius.circular(28)),
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.grey,
                                   blurRadius: 10,
@@ -157,10 +193,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: Image.asset('assets/buzzadd.png'),
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 14,
                                 ),
-                                Text(
+                                const Text(
                                   "Let's buzz!",
                                   style: TextStyle(
                                     fontSize: 18,
@@ -186,24 +222,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                           MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.only(
-                                                  bottom: 26, right: 16),
-                                              child: Text(
-                                                '+ Add a topic',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.end,
+                                        //   children: [
+                                        //     Container(
+                                        //       margin: const EdgeInsets.only(
+                                        //           bottom: 26, right: 16),
+                                        //       child: const Text(
+                                        //         '+ Add a topic',
+                                        //         style: TextStyle(
+                                        //           fontSize: 14,
+                                        //           fontWeight: FontWeight.bold,
+                                        //           color: Colors.green,
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
@@ -228,28 +264,26 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       );
                                                     });
                                               },
-                                              child: Container(
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      height: 60,
-                                                      child: Image.asset(
-                                                          'assets/globe3.gif'),
+                                              child: Column(
+                                                children: [
+                                                  SizedBox(
+                                                    height: 60,
+                                                    child: Image.asset(
+                                                        'assets/globe3.gif'),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 10.h,
+                                                  ),
+                                                  const Text(
+                                                    'Open',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black,
                                                     ),
-                                                    SizedBox(
-                                                      height: 10.h,
-                                                    ),
-                                                    Text(
-                                                      'Open',
-                                                      style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
+                                                  )
+                                                ],
                                               ),
                                             ),
                                             // Social section
@@ -276,12 +310,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     });
                                               },
                                               child: Container(
-                                                decoration: BoxDecoration(
+                                                decoration: const BoxDecoration(
                                                     // color: Colors.blue,
                                                     ),
                                                 child: Column(
                                                   children: [
-                                                    Container(
+                                                    SizedBox(
                                                       height: 60,
                                                       child: Image.asset(
                                                           'assets/globe3.gif'),
@@ -289,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizedBox(
                                                       height: 10.h,
                                                     ),
-                                                    Text(
+                                                    const Text(
                                                       'Social',
                                                       style: TextStyle(
                                                         fontSize: 20,
@@ -325,7 +359,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               child: Container(
                                                 child: Column(
                                                   children: [
-                                                    Container(
+                                                    SizedBox(
                                                       height: 60,
                                                       child: Image.asset(
                                                           'assets/globe3.gif'),
@@ -333,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     SizedBox(
                                                       height: 10.h,
                                                     ),
-                                                    Text(
+                                                    const Text(
                                                       'Closed',
                                                       style: TextStyle(
                                                         fontSize: 20,
@@ -352,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           thickness: 1,
                                           color: Colors.black.withOpacity(0.20),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 18,
                                         ),
                                         Row(
@@ -384,9 +418,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         InkWell(
                                           child: Container(
                                             width: 160.w,
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                                 vertical: 10),
-                                            decoration: BoxDecoration(
+                                            decoration: const BoxDecoration(
                                               color: Colors.green,
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(28)),
@@ -401,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Container(
+                                                SizedBox(
                                                   height: 34,
                                                   child: Padding(
                                                     padding:
@@ -411,10 +445,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         'assets/buzzadd.png'),
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 14,
                                                 ),
-                                                Text(
+                                                const Text(
                                                   "Let's go",
                                                   style: TextStyle(
                                                     fontSize: 20,
@@ -461,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         children: <Widget>[
-                                                          SizedBox(
+                                                          const SizedBox(
                                                             height: 18,
                                                           ),
                                                           Row(
@@ -501,12 +535,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           InkWell(
                                                             child: Container(
                                                               width: 160.w,
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .symmetric(
                                                                       vertical:
                                                                           10),
                                                               decoration:
-                                                                  BoxDecoration(
+                                                                  const BoxDecoration(
                                                                 color: Colors
                                                                     .green,
                                                                 borderRadius: BorderRadius
@@ -526,13 +561,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
                                                                         .center,
-                                                                children: [
-                                                                  Container(
+                                                                children: const [
+                                                                  SizedBox(
                                                                     height: 30,
                                                                     child:
                                                                         Padding(
                                                                       padding:
-                                                                          const EdgeInsets.all(
+                                                                          EdgeInsets.all(
                                                                               4.0),
                                                                       child:
                                                                           Icon(
@@ -574,12 +609,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           InkWell(
                                                             child: Container(
                                                               width: 160.w,
-                                                              padding: EdgeInsets
-                                                                  .symmetric(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .symmetric(
                                                                       vertical:
                                                                           10),
                                                               decoration:
-                                                                  BoxDecoration(
+                                                                  const BoxDecoration(
                                                                 color: Colors
                                                                     .green,
                                                                 borderRadius: BorderRadius
@@ -599,13 +635,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
                                                                         .center,
-                                                                children: [
-                                                                  Container(
+                                                                children: const [
+                                                                  SizedBox(
                                                                     height: 30,
                                                                     child:
                                                                         Padding(
                                                                       padding:
-                                                                          const EdgeInsets.all(
+                                                                          EdgeInsets.all(
                                                                               4.0),
                                                                       child:
                                                                           Icon(
@@ -665,7 +701,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             );
           },
-          label: Text(
+          label: const Text(
             'Start a Buzz',
             style: TextStyle(
               fontSize: 14,
@@ -674,8 +710,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           icon: Container(
-            padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(2),
+            decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(16)),
             ),
@@ -707,7 +743,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.only(right: 18),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  db.put('userLoggedIn', false);
+                  log('User Logged out');
+                },
                 icon: Image.asset(
                   'assets/globe3.gif',
                   width: 28.w,
@@ -717,263 +756,339 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Text(
-              'Welcome to NameBuzz',
-              style: TextStyle(
-                fontSize: 24.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
-          // Storis showing section ***************************************
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            db.get('allPost') == null
+                ? Column(
+                    children: [
+                      SizedBox(
+                        height: 300.h,
+                      ),
+                      Center(
+                        child: Text(
+                          'Welcome to NameBuzz',
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                :
+                // Storis showing section ***************************************
 
-          //1st Post ******************************************************
-          // Container(
-          //   padding: EdgeInsets.only(bottom: 8),
-          //   margin: EdgeInsets.only(top: 10),
-          //   color: Colors.white,
-          //   child: Column(
-          //     children: [
-          //       //1st section
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           Row(
-          //             children: [
-          //               Container(
-          //                 child: IconButton(
-          //                   onPressed: () {},
-          //                   icon: Icon(Icons.photo_camera),
-          //                   iconSize: 20,
-          //                 ),
-          //               ),
-          //               Container(
-          //                 child: Text(
-          //                   'Travel',
-          //                   style: TextStyle(
-          //                     fontSize: 14,
-          //                   ),
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           IconButton(
-          //             onPressed: () {},
-          //             icon: Icon(Icons.more_vert),
-          //             iconSize: 20,
-          //           ),
-          //         ],
-          //       ),
-          //       Divider(
-          //         thickness: 1,
-          //         color: Colors.black,
-          //       ),
-          //       // 2nd section
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           Row(
-          //             children: [
-          //               Container(
-          //                 child: IconButton(
-          //                   onPressed: () {},
-          //                   icon: CircleAvatar(
-          //                     backgroundImage:
-          //                         AssetImage('assets/buzz-logo.png'),
-          //                     backgroundColor: Colors.transparent,
-          //                   ),
-          //                 ),
-          //               ),
-          //               Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   Padding(
-          //                     padding: const EdgeInsets.only(left: 6),
-          //                     child: Row(
-          //                       children: [
-          //                         Text(
-          //                           'Namebuzz',
-          //                           style: TextStyle(
-          //                             fontSize: 16,
-          //                             fontWeight: FontWeight.bold,
-          //                           ),
-          //                         ),
-          //                         Padding(
-          //                           padding: const EdgeInsets.only(left: 6),
-          //                           child: Icon(
-          //                             Icons.verified,
-          //                             size: 18,
-          //                             color: Color(0XFFFFC312),
-          //                           ),
-          //                         ),
-          //                       ],
-          //                     ),
-          //                   ),
-          //                   Padding(
-          //                     padding: const EdgeInsets.only(left: 6),
-          //                     child: Text(
-          //                       '1m ago',
-          //                       style: TextStyle(
-          //                         fontSize: 12,
-          //                       ),
-          //                     ),
-          //                   )
-          //                 ],
-          //               ),
-          //             ],
-          //           ),
-          //           IconButton(
-          //             onPressed: () {},
-          //             icon: Icon(Icons.bookmark_outline),
-          //             iconSize: 22,
-          //           ),
-          //         ],
-          //       ),
-          //       // 3rd section
-          //       Container(
-          //         margin: EdgeInsets.all(6),
-          //         child: Column(
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             Padding(
-          //               padding: const EdgeInsets.only(bottom: 8),
-          //               child: Text(
-          //                 'This is post title. This is post title. This is post title. This is post title. This is post title. This is post title',
-          //                 style: TextStyle(
-          //                   fontSize: 14,
-          //                   // fontFamily: 'Roboto',
-          //                 ),
-          //               ),
-          //             ),
-          //             Image(image: AssetImage('assets/1.jpg')),
-          //           ],
-          //         ),
-          //       ),
-          //       // 4th section
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //         children: [
-          //           InkWell(
-          //             child: Container(
-          //               height: 24.h,
-          //               width: 24.w,
-          //               decoration: BoxDecoration(
-          //                 image: DecorationImage(
-          //                   image: AssetImage('assets/buzzpost.png'),
-          //                 ),
-          //               ),
-          //             ),
-          //             onTap: () {},
-          //           ),
-          //           IconButton(
-          //               onPressed: () {}, icon: Icon(Icons.favorite_outline)),
-          //           IconButton(
-          //               onPressed: () {}, icon: Icon(Icons.forum_outlined)),
-          //           IconButton(
-          //               onPressed: () {}, icon: Icon(Icons.comment_outlined)),
-          //           IconButton(
-          //               onPressed: () {}, icon: Icon(Icons.share_outlined)),
-          //         ],
-          //       ),
-          //       // 5th section
-          //       Row(
-          //         children: [
-          //           Padding(
-          //             padding: const EdgeInsets.only(left: 18),
-          //             child: Text(
-          //               '14K',
-          //               style: TextStyle(
-          //                 fontSize: 14.sp,
-          //                 fontWeight: FontWeight.bold,
-          //                 color: Color(0XFFFFC312),
-          //               ),
-          //             ),
-          //           ),
-          //           SizedBox(
-          //             width: 2,
-          //           ),
-          //           Text(
-          //             'Likes',
-          //             style: TextStyle(fontSize: 14),
-          //           )
-          //         ],
-          //       ),
-          //       // 6th section
-          //       SizedBox(
-          //         height: 4,
-          //       ),
-          //       // 7th section
-          //       Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           Padding(
-          //             padding: const EdgeInsets.only(left: 12),
-          //             child: Row(
-          //               children: [
-          //                 Text(
-          //                   'Prashant',
-          //                   style: TextStyle(fontSize: 10.sp),
-          //                 ),
-          //                 SizedBox(
-          //                   width: 1.w,
-          //                 ),
-          //                 Text('and', style: TextStyle(fontSize: 10.sp)),
-          //                 SizedBox(
-          //                   width: 1.w,
-          //                 ),
-          //                 Text('55',
-          //                     style: TextStyle(
-          //                       fontSize: 10.sp,
-          //                       fontWeight: FontWeight.bold,
-          //                     )),
-          //                 SizedBox(
-          //                   width: 1.w,
-          //                 ),
-          //                 Text('others comment',
-          //                     style: TextStyle(fontSize: 10.sp)),
-          //               ],
-          //             ),
-          //           ),
-          //           Container(
-          //             margin: EdgeInsets.only(right: 14),
-          //             child: Row(
-          //               children: [
-          //                 Padding(
-          //                   padding: const EdgeInsets.only(right: 4),
-          //                   child: Container(
-          //                     height: 18.h,
-          //                     width: 18.w,
-          //                     child: Image.asset('assets/buzzadd.png'),
-          //                   ),
-          //                 ),
-          //                 Text(
-          //                   '20',
-          //                   style: TextStyle(
-          //                     fontSize: 10.sp,
-          //                     fontWeight: FontWeight.bold,
-          //                   ),
-          //                 ),
-          //                 SizedBox(
-          //                   width: 2.w,
-          //                 ),
-          //                 Text(
-          //                   'people have buzz on this',
-          //                   style: TextStyle(fontSize: 10.sp),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // Main column children
-        ],
+                //1st Post ******************************************************
+                Container(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    margin: const EdgeInsets.only(top: 10),
+                    //color: Colors.white,
+                    child: Column(
+                      children: [
+                        //1st section
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  child: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.photo_camera),
+                                    iconSize: 20,
+                                  ),
+                                ),
+                                Container(
+                                  child: const Text(
+                                    'Travel',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.more_vert),
+                              iconSize: 20,
+                            ),
+                          ],
+                        ),
+                        const Divider(
+                          thickness: 1,
+                          color: Colors.black,
+                        ),
+                        // 2nd section
+                        SizedBox(
+                          width: double.infinity,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: allPosts.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 15.0),
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  child: IconButton(
+                                                    onPressed: () {},
+                                                    icon: const CircleAvatar(
+                                                      backgroundImage: AssetImage(
+                                                          'assets/buzz-logo.png'),
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 6),
+                                                      child: Row(
+                                                        children: const [
+                                                          Text(
+                                                            'Namebuzz',
+                                                            style: TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    left: 6),
+                                                            child: Icon(
+                                                              Icons.verified,
+                                                              size: 18,
+                                                              color: Color(
+                                                                  0XFFFFC312),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          left: 6),
+                                                      child: Text(
+                                                        '1m ago',
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(
+                                                  Icons.bookmark_outline),
+                                              iconSize: 22,
+                                            ),
+                                          ],
+                                        ),
+                                        // 3rd section
+                                        Container(
+                                          margin: const EdgeInsets.all(6),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 8),
+                                                child: Text(
+                                                  // 'This is post title. This is post title. This is post title. This is post title. This is post title. This is post title',
+                                                  '${allPosts[index]['caption']}',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    // fontFamily: 'Roboto',
+                                                  ),
+                                                ),
+                                              ),
+                                              allPosts.isEmpty
+                                                  ? const Image(
+                                                      image: AssetImage(
+                                                          'assets/1.jpg'))
+                                                  // : Image.file(postedImage),
+                                                  : Image.memory(
+                                                      allPosts[index]['image']),
+                                            ],
+                                          ),
+                                        ),
+                                        // 4th section
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            InkWell(
+                                              child: Container(
+                                                height: 24.h,
+                                                width: 24.w,
+                                                decoration: const BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: AssetImage(
+                                                        'assets/buzzpost.png'),
+                                                  ),
+                                                ),
+                                              ),
+                                              onTap: () {},
+                                            ),
+                                            IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                    Icons.favorite_outline)),
+                                            IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                    Icons.forum_outlined)),
+                                            IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                    Icons.comment_outlined)),
+                                            IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                    Icons.share_outlined)),
+                                          ],
+                                        ),
+                                        // 5th section
+                                        Row(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 18),
+                                              child: Text(
+                                                '14K',
+                                                style: TextStyle(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      const Color(0XFFFFC312),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            const Text(
+                                              'Likes',
+                                              style: TextStyle(fontSize: 14),
+                                            )
+                                          ],
+                                        ),
+                                        // 6th section
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        // 7th section
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 12),
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    'Prashant',
+                                                    style: TextStyle(
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text('and',
+                                                      style: TextStyle(
+                                                          fontSize: 10.sp)),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text('55',
+                                                      style: TextStyle(
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      )),
+                                                  SizedBox(
+                                                    width: 1.w,
+                                                  ),
+                                                  Text('others comment',
+                                                      style: TextStyle(
+                                                          fontSize: 10.sp)),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 14),
+                                              child: Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 4),
+                                                    child: SizedBox(
+                                                      height: 18.h,
+                                                      width: 18.w,
+                                                      child: Image.asset(
+                                                          'assets/buzzadd.png'),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '20',
+                                                    style: TextStyle(
+                                                      fontSize: 10.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 2.w,
+                                                  ),
+                                                  Text(
+                                                    'people have buzz on this',
+                                                    style: TextStyle(
+                                                        fontSize: 10.sp),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                        )
+                      ],
+                    ),
+                  ),
+            // Main column children
+          ],
+        ),
       ),
     );
   }
