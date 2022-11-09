@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:hive/hive.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool status3 = false;
   bool isTopicAdded = false;
   File? _image;
   var editedImage;
@@ -478,7 +480,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     );
                                                   });
                                             } else {
-// 3rd Section
+                                              // 3rd Section
                                               Navigator.pop(context);
                                               showModalBottomSheet<void>(
                                                 context: context,
@@ -498,185 +500,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           const SizedBox(
                                                             height: 18,
                                                           ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                'Start a buzz',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      16.sp,
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 4.w,
-                                                              ),
-                                                              Text(
-                                                                'Choose from : -->',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      16.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              ),
-                                                            ],
+                                                          Text(
+                                                            'Your post can be buzzed',
+                                                            style: TextStyle(
+                                                              fontSize: 16.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
                                                           ),
+
                                                           SizedBox(
                                                             height: 18.h,
                                                           ),
-                                                          InkWell(
-                                                            child: Container(
-                                                              width: 160.w,
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          10),
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                color: Colors
-                                                                    .green,
-                                                                borderRadius: BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            28)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    blurRadius:
-                                                                        6,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: const [
-                                                                  SizedBox(
-                                                                    height: 30,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              4.0),
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .photo_library,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 14,
-                                                                  ),
-                                                                  Text(
-                                                                    "Gallery",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            onTap: () {
-                                                              _openImagePicker(
-                                                                  ImageSource
-                                                                      .gallery);
-                                                            },
+                                                          // Toggle button
+                                                          FlutterSwitch(
+                                                            showOnOff: true,
+                                                            activeTextColor:
+                                                                Colors.black,
+                                                            inactiveTextColor:
+                                                                Colors.blue,
+                                                            value: status3,
+                                                            onToggle: (val) {},
                                                           ),
-                                                          SizedBox(
-                                                            height: 20.h,
-                                                          ),
-                                                          InkWell(
-                                                            child: Container(
-                                                              width: 160.w,
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .symmetric(
-                                                                      vertical:
-                                                                          10),
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                color: Colors
-                                                                    .green,
-                                                                borderRadius: BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            28)),
-                                                                boxShadow: [
-                                                                  BoxShadow(
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    blurRadius:
-                                                                        6,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .center,
-                                                                children: const [
-                                                                  SizedBox(
-                                                                    height: 30,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding:
-                                                                          EdgeInsets.all(
-                                                                              4.0),
-                                                                      child:
-                                                                          Icon(
-                                                                        Icons
-                                                                            .photo_camera,
-                                                                        color: Colors
-                                                                            .white,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 14,
-                                                                  ),
-                                                                  Text(
-                                                                    "Camera",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            onTap: () {
-                                                              _openImagePicker(
-                                                                  ImageSource
-                                                                      .camera);
-                                                            },
-                                                          ),
+                                                          Text("post & buzz"),
                                                         ],
                                                       ),
                                                     ),
