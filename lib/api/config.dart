@@ -1,8 +1,8 @@
 final Map<String, Environment> envs = {
-  'dev': Environment(
-    endPointUrl: 'com.whistle.app',
+  'post': Environment(
+    endPointUrl: 'postnamebuzz.herokuapp.com',
     secured: true,
-    additionalPath: '/api/user/',
+    additionalPath: '',
     port: '',
   ),
   'stag': Environment(

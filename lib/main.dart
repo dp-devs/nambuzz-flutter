@@ -31,10 +31,10 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Namebuzz',
-            home: HomeScreen());
-        // home: db.get('userLoggedIn') == true
-        //     ? const HomeScreen()
-        //     : const SplashScreen());
+            // home: HomeScreen());
+            home: db.get('userLoggedIn') == true
+                ? const HomeScreen()
+                : const SplashScreen());
       },
     );
   }
